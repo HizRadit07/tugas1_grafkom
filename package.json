@@ -1,0 +1,15 @@
+{
+  "name": "tugas1_grafkom",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/HizRadit07/tugas1_grafkom.git",
+  "author": "HizRadit07 <hizkiagenius@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "snowpack dev",
+    "build": "snowpack build"
+},
+  "devDependencies": {
+    "snowpack": "^3.8.8"
+  }
+}
