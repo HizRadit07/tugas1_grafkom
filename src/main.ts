@@ -94,15 +94,20 @@ async function main(){
     //create program
     const drawProgram = await createProgram(gl,vertexShader,fragmentShader)
 
-
-
-    canvas.addEventListener('click',(event) =>{
-        var canvas_x = getXCursorPosition(canvas,event)
-        var canvas_y = getYCursorPosition(canvas,event)
-        console.log(canvas_x,canvas_y)
-        drawLine(canvas_x,canvas_y,arrObjects,gl,drawProgram)
-    })
     
+    canvas.addEventListener('mousedown', (event) =>{
+        var canvas_x = getXCursorPosition(canvas, event)
+        var canvas_y = getYCursorPosition(canvas, event)   
+        console.log('x : '+ canvas_x + ' y : ' + canvas_y)
+        startDraw(canvas_x, canvas_y, arrObjects, gl, drawProgram)
+    })
+}
+
+function startDraw(x,y, objectArray, gl:WebGL2RenderingContext, program:WebGLProgram){
+    //utk condition isLine, isSquare, dsb, masukin sini
+    if (isLine){
+        drawLine(x,y, objectArray, gl, program)
+    }
 }
 
 function drawLine(x,y, objectArray, gl:WebGL2RenderingContext, program: WebGLProgram){
