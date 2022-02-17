@@ -1,6 +1,6 @@
 import { createProgram, loadShader } from "./loaders/loader";
 import { Drawables } from "./drawables";
-// import {drawLine} from "./objects/line"
+import { drawLine } from "./objects/line"
 
 let mousePos: [number, number] = [0,0];
 var isLine = false
@@ -8,11 +8,19 @@ var isSquare = false
 var isRectangle = false
 var isPolygon = false
 
-var n_points = 0
+//number of points
+var objProps = {
+    n_points:0,
+    vertices:[],
+    rgb: [0.0,0.0,0.0],
+    arrObjects: []
+}
 
-var vertices = [] //arr for vertices
-var rgb = [0.0, 0.0, 0.0] //arr for color
-var arrObjects = new Array<Drawables>() //arr for objects to be drawn
+// var n_points = 0
+
+// var vertices = [] //arr for vertices
+// var rgb = [0.0, 0.0, 0.0] //arr for color
+// var arrObjects = new Array<Drawables>() //arr for objects to be drawn
 
 
 
@@ -66,7 +74,7 @@ function setupUI(){
     })
 }
 
-function renderAll(objArr : Array<Drawables>, gl:WebGL2RenderingContext, program:WebGLProgram){
+export function renderAll(objArr : Array<Drawables>, gl:WebGL2RenderingContext, program:WebGLProgram){
     for (let i=0; i< objArr.length;i++){
         drawObject(gl,program,objArr[i].vert,objArr[i].meth,objArr[i].n)
     }
@@ -95,45 +103,45 @@ async function main(){
     const drawProgram = await createProgram(gl,vertexShader,fragmentShader)
 
     
-    canvas.addEventListener('mousedown', (event) =>{
+    canvas.addEventListener('mouseup', (event) =>{
         var canvas_x = getXCursorPosition(canvas, event)
-        var canvas_y = getYCursorPosition(canvas, event)   
-        console.log('x : '+ canvas_x + ' y : ' + canvas_y)
-        startDraw(canvas_x, canvas_y, arrObjects, gl, drawProgram)
+        var canvas_y = getYCursorPosition(canvas, event)
+        // console.log(objProps.vertices)
+        startDraw(canvas_x,canvas_y,gl,drawProgram,objProps)
     })
 }
 
-function startDraw(x,y, objectArray, gl:WebGL2RenderingContext, program:WebGLProgram){
+function startDraw(x,y, gl:WebGL2RenderingContext, program:WebGLProgram, objProps){
     //utk condition isLine, isSquare, dsb, masukin sini
     if (isLine){
-        drawLine(x,y, objectArray, gl, program)
+        objProps = drawLine(x,y, gl, program, objProps)
     }
 }
 
-function drawLine(x,y, objectArray, gl:WebGL2RenderingContext, program: WebGLProgram){
+// function drawLine(x,y, objectArray, gl:WebGL2RenderingContext, program: WebGLProgram){
 
-    if (n_points < 2){
-        vertices.push(x)
-        vertices.push(y)
-        vertices.push(rgb[0]/255)
-        vertices.push(rgb[1]/255)
-        vertices.push(rgb[2]/255)
-        n_points++
-    }
+//     if (n_points < 2){
+//         vertices.push(x)
+//         vertices.push(y)
+//         vertices.push(rgb[0]/255)
+//         vertices.push(rgb[1]/255)
+//         vertices.push(rgb[2]/255)
+//         n_points++
+//     }
     
-    if (n_points == 2) {
-        console.log('masuk sini')
-        let obj : Drawables = {
-            vert: vertices,
-            meth: gl.LINES,
-            n: n_points
-        }
-        objectArray.push(obj)
-        renderAll(objectArray,gl,program)
-        vertices = []
-        n_points = 0
-    }
-}
+//     if (n_points == 2) {
+//         console.log('masuk sini')
+//         let obj : Drawables = {
+//             vert: vertices,
+//             meth: gl.LINES,
+//             n: n_points
+//         }
+//         objectArray.push(obj)
+//         renderAll(objectArray,gl,program)
+//         vertices = []
+//         n_points = 0
+//     }
+// }
 
 
 function getXCursorPosition(canvas,event) {
