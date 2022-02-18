@@ -1,5 +1,7 @@
 export interface Drawables {
-    vert : any
+    vert : number[]
     meth : any
     n : any
+    type: string
+    points: number[]
 }

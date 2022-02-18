@@ -13,7 +13,8 @@ var objProps = {
     n_points:0,
     vertices:[],
     rgb: [0.0,0.0,0.0],
-    arrObjects: []
+    curPoints:[],
+    arrObjects: new Array<Drawables>()
 }
 
 // var n_points = 0
@@ -75,9 +76,16 @@ function setupUI(){
 }
 
 export function renderAll(objArr : Array<Drawables>, gl:WebGL2RenderingContext, program:WebGLProgram){
+    //this is an n^2 method but i really dont know another way to implement it
     for (let i=0; i< objArr.length;i++){
         drawObject(gl,program,objArr[i].vert,objArr[i].meth,objArr[i].n)
+        for (let j=0;j<objArr[i].points.length;j++){
+            let curx = objArr[i].points[j][0]
+            let cury = objArr[i].points[j][1]
+            drawObject(gl,program,getSquarePoint(curx,cury),gl.TRIANGLE_FAN,4) //hardcode 4 bcs points will be square shaped
+        }
     }
+
 }
 
 
@@ -118,30 +126,20 @@ function startDraw(x,y, gl:WebGL2RenderingContext, program:WebGLProgram, objProp
     }
 }
 
-// function drawLine(x,y, objectArray, gl:WebGL2RenderingContext, program: WebGLProgram){
-
-//     if (n_points < 2){
-//         vertices.push(x)
-//         vertices.push(y)
-//         vertices.push(rgb[0]/255)
-//         vertices.push(rgb[1]/255)
-//         vertices.push(rgb[2]/255)
-//         n_points++
-//     }
-    
-//     if (n_points == 2) {
-//         console.log('masuk sini')
-//         let obj : Drawables = {
-//             vert: vertices,
-//             meth: gl.LINES,
-//             n: n_points
-//         }
-//         objectArray.push(obj)
-//         renderAll(objectArray,gl,program)
-//         vertices = []
-//         n_points = 0
+// function drawPoints(gl:WebGL2RenderingContext, program:WebGLProgram){
+//     for (var i=0;i<objProps.arrObjects.length;i++){
+//         drawObject(gl,program,objProps.arrObjects[i].points,gl.TRIANGLE_FAN,4)
 //     }
 // }
+
+function getSquarePoint(x, y) { //get points
+    return [
+        x-0.015, y+0.015, 1.0, 1.0, 1.0,
+        x+0.015, y+0.015, 1.0, 1.0, 1.0,
+        x+0.015, y-0.015, 1.0, 1.0, 1.0,
+        x-0.015, y-0.015, 1.0, 1.0, 1.0
+    ]
+}
 
 
 function getXCursorPosition(canvas,event) {

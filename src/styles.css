@@ -16,3 +16,7 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+#gl_canvas{
+    background-color: rgb(158, 206, 182);
+}
