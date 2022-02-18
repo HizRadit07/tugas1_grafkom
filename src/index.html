@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas 1 Grafkom</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class="flex">
+        <div class="sidebar">
+            <p>GrafkomPaint</p>
+            <div class="flex-col">
+                <p>Mouse position</p>
+                <p>X: <span id="x-pos"></span></p>
+                <p>Y: <span id="y-pos"></span></p>
+            </div>
+            <button id="draw-line">Draw Line</button>
+            <button id="draw-square">Draw Square</button>
+            <button id="draw-rect">Draw Rectangle</button>
+            <button id="draw-pol">Draw Polygons</button>
+        </div>
+        <canvas id="gl_canvas"></canvas>
+    </div>
+    <script src="main.js" type="module"></script>
+</body>
+</html>
