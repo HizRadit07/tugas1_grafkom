@@ -17,13 +17,10 @@ var objProps = {
     arrObjects: new Array<Drawables>()
 }
 
-// var n_points = 0
-
-// var vertices = [] //arr for vertices
-// var rgb = [0.0, 0.0, 0.0] //arr for color
-// var arrObjects = new Array<Drawables>() //arr for objects to be drawn
-
-
+//vars for selection and moving purposes
+var selectedObject
+var idxPoint
+var isDrag = false
 
 function setLine() {
     isLine = true
@@ -48,6 +45,13 @@ function setPolygon(){
     isSquare = false
     isRectangle = false
     isPolygon = true
+}
+
+export function setClear(){
+    isLine = false
+    isSquare = false
+    isRectangle = false
+    isPolygon = false
 }
 
 function setupUI(){
@@ -111,11 +115,25 @@ async function main(){
     const drawProgram = await createProgram(gl,vertexShader,fragmentShader)
 
     
-    canvas.addEventListener('mouseup', (event) =>{
+    canvas.addEventListener('mousedown', (event) =>{
         var canvas_x = getXCursorPosition(canvas, event)
         var canvas_y = getYCursorPosition(canvas, event)
         // console.log(objProps.vertices)
         startDraw(canvas_x,canvas_y,gl,drawProgram,objProps)
+        checkSelectedObject(canvas_x,canvas_y)
+
+
+        if (selectedObject != null){
+            isDrag = true
+            canvas.addEventListener('mouseup', (event) =>{
+                changeObjectPoint(canvas,event,gl,drawProgram)
+            })
+            if(!isDrag) {
+                canvas.removeEventListener("mouseup", (event) => {
+                    changeObjectPoint(canvas, event, gl, drawProgram)
+                })
+            }
+        }
     })
 }
 
@@ -123,21 +141,16 @@ function startDraw(x,y, gl:WebGL2RenderingContext, program:WebGLProgram, objProp
     //utk condition isLine, isSquare, dsb, masukin sini
     if (isLine){
         objProps = drawLine(x,y, gl, program, objProps)
+        //this makes it so that harus gambar satu-satu, so pencet button, draw
     }
 }
 
-// function drawPoints(gl:WebGL2RenderingContext, program:WebGLProgram){
-//     for (var i=0;i<objProps.arrObjects.length;i++){
-//         drawObject(gl,program,objProps.arrObjects[i].points,gl.TRIANGLE_FAN,4)
-//     }
-// }
-
 function getSquarePoint(x, y) { //get points
     return [
-        x-0.015, y+0.015, 1.0, 1.0, 1.0,
-        x+0.015, y+0.015, 1.0, 1.0, 1.0,
-        x+0.015, y-0.015, 1.0, 1.0, 1.0,
-        x-0.015, y-0.015, 1.0, 1.0, 1.0
+        x-0.010, y+0.015, 1.0, 1.0, 1.0,
+        x+0.010, y+0.015, 1.0, 1.0, 1.0,
+        x+0.010, y-0.015, 1.0, 1.0, 1.0,
+        x-0.010, y-0.015, 1.0, 1.0, 1.0
     ]
 }
 
@@ -170,6 +183,44 @@ function getMousePosition(canvas: HTMLCanvasElement, event) {
     }
 }
 
+//selection and dragging functions
+
+function checkSelectedObject(x,y){
+    selectedObject = null
+    idxPoint = -1
+
+    objProps.arrObjects.forEach(function (item){
+        item.points.forEach(function (point,idx){
+            var curSqPoint = getSquarePoint(point[0],point[1])
+            if (x > curSqPoint[0] && y < curSqPoint[1] &&
+                x < curSqPoint[5] && y < curSqPoint[6] &&
+                x < curSqPoint[10] && y > curSqPoint[11] &&
+                x > curSqPoint[15] && y > curSqPoint[16]){
+                    selectedObject = item
+                    idxPoint = idx
+                    console.log("object selected with idx " + idx)
+                }
+        })
+    })
+}
+
+function changeObjectPoint(canvas, event, gl:WebGL2RenderingContext, program:WebGLProgram){
+    if (isDrag){
+        var x = getXCursorPosition(canvas, event)
+        var y = getYCursorPosition(canvas, event)
+
+        //selectedObject is drawables, ga di specify disini
+        //but well i wrote it so should be fine
+        //change the vert
+        selectedObject.vert[idxPoint*5] = x
+        selectedObject.vert[idxPoint*5+1] = y
+
+        //change the point
+        selectedObject.points[idxPoint] = [x,y]
+        renderAll(objProps.arrObjects,gl,program)
+        isDrag = false
+    }
+}
 
 
 
