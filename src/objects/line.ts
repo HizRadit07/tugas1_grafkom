@@ -1,4 +1,4 @@
-import {renderAll} from "../main"
+import {renderAll, setClear} from "../main"
 import { Drawables } from "../drawables"
 
 
@@ -16,7 +16,7 @@ export function drawLine(x,y, gl:WebGL2RenderingContext, program: WebGLProgram, 
         objProps.curPoints.push([x,y])
 
         objProps.n_points++
-        console.log(objProps.vertices)
+        // console.log(objProps.vertices)
 
         if (objProps.n_points == 2) {
             let obj : Drawables = {
@@ -31,6 +31,7 @@ export function drawLine(x,y, gl:WebGL2RenderingContext, program: WebGLProgram, 
             objProps.vertices = []
             objProps.n_points = 0
             objProps.curPoints = []
+            setClear()
         }  
         return objProps
     }
