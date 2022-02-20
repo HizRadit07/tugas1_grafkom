@@ -1,6 +1,8 @@
 import { createProgram, loadShader } from "./loaders/loader";
 import { Drawables } from "./drawables";
 import { drawLine } from "./objects/line"
+import { drawSquare } from "./objects/square";
+import { drawRect } from "./objects/rectangle";
 
 let mousePos: [number, number] = [0,0];
 var isLine = false
@@ -142,6 +144,10 @@ function startDraw(x,y, gl:WebGL2RenderingContext, program:WebGLProgram, objProp
     if (isLine){
         objProps = drawLine(x,y, gl, program, objProps)
         //this makes it so that harus gambar satu-satu, so pencet button, draw
+    } else if (isSquare) {
+        objProps = drawSquare(x,y, gl, program, objProps)
+    } else if (isRectangle) {
+        objProps = drawRect(x,y, gl, program, objProps)
     }
 }
 
