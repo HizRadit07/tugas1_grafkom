@@ -3,6 +3,7 @@ import { Drawables } from "./drawables";
 import { drawLine } from "./objects/line"
 import { drawSquare, scaleSquare } from "./objects/square";
 import { drawRect, scaleRect } from "./objects/rectangle";
+import { exportAsFile } from "./save_load_utils";
 
 let mousePos: [number, number] = [0,0];
 var isLine = false
@@ -61,23 +62,22 @@ function setupUI(){
     const drawSquareButton = document.getElementById('draw-square') as HTMLButtonElement
     const drawRectButton = document.getElementById('draw-rect') as HTMLButtonElement
     const drawPolygonButton = document.getElementById('draw-pol') as HTMLButtonElement
-    
+    const fileExportButton = document.getElementById('export-btn') as HTMLButtonElement
 
     drawLineButton.addEventListener('click', () => {
         setLine()
-        console.log(isLine)
     })
     drawSquareButton.addEventListener('click', () => {
         setSquare()
-        console.log(isLine)
     })
     drawRectButton.addEventListener('click', () => {
         setRect()
-        console.log(isLine)
     })
     drawPolygonButton.addEventListener('click', () => {
         setPolygon()
-        console.log(isLine)
+    })
+    fileExportButton.addEventListener('click', () =>{
+        exportAsFile(objProps.arrObjects)
     })
 }
 

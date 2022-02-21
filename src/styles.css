@@ -17,6 +17,12 @@ body {
     flex-direction: column;
 }
 
+.export_import{
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
 #gl_canvas{
     background-color: rgb(158, 206, 182);
 }
