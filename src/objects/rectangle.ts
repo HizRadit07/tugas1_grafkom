@@ -30,7 +30,7 @@ export function drawRect(x,y, gl:WebGL2RenderingContext, program: WebGLProgram, 
                     vert: rect_vert,
                     meth: gl.TRIANGLE_FAN,
                     n: objProps.n_points,
-                    type: "Triangle",
+                    type: "Rectangle",
                     points: rect_points
                 }
             
@@ -73,4 +73,27 @@ function pushToArray(destination:any, source:any) {
     for (let i = 0; i < source.length; i++) {
         destination.push(source[i])
     }
+}
+
+export function scaleRect(obj:any, x:number, y:number, idxPoint:number) {
+    let pivotPoint = (idxPoint+2)%4
+ 
+    // Setting pivot point as index 0
+    setObjPointVertex(0, obj, obj.points[pivotPoint][0], obj.points[pivotPoint][1])
+
+    // Setting opposite point as index 2
+    setObjPointVertex(2, obj, x, y)
+
+    //Setting reimaing points
+    setObjPointVertex(1, obj, obj.points[0][0], obj.points[2][1])
+    setObjPointVertex(3, obj, obj.points[2][0], obj.points[0][1])
+
+    console.log(obj.points)
+    console.log(obj.vert)
+}
+
+function setObjPointVertex(index:number, obj:any, x:number, y:number) {
+    obj.vert[index*5] = x
+    obj.vert[index*5+1] = y
+    obj.points[index] = [x,y]
 }

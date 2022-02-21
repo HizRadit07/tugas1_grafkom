@@ -1,8 +1,8 @@
 import { createProgram, loadShader } from "./loaders/loader";
 import { Drawables } from "./drawables";
 import { drawLine } from "./objects/line"
-import { drawSquare } from "./objects/square";
-import { drawRect } from "./objects/rectangle";
+import { drawSquare, scaleSquare } from "./objects/square";
+import { drawRect, scaleRect } from "./objects/rectangle";
 
 let mousePos: [number, number] = [0,0];
 var isLine = false
@@ -214,15 +214,25 @@ function changeObjectPoint(canvas, event, gl:WebGL2RenderingContext, program:Web
     if (isDrag){
         var x = getXCursorPosition(canvas, event)
         var y = getYCursorPosition(canvas, event)
+        // let idxPoint = checkSelectedObject(x,y)[1]
+        // console.log("YO: " + typeof idxPoint[1])
 
         //selectedObject is drawables, ga di specify disini
         //but well i wrote it so should be fine
         //change the vert
-        selectedObject.vert[idxPoint*5] = x
-        selectedObject.vert[idxPoint*5+1] = y
+        if (selectedObject.type == "Square") {
+            scaleSquare(selectedObject, x, y, idxPoint)
+        } else if (selectedObject.type == "Rectangle") {
+            scaleRect(selectedObject, x, y, idxPoint)
+        } else {
+            selectedObject.vert[idxPoint*5] = x
+            selectedObject.vert[idxPoint*5+1] = y
+            selectedObject.points[idxPoint] = [x,y]
+        }
+        
+        console.log(selectedObject.type)
 
         //change the point
-        selectedObject.points[idxPoint] = [x,y]
         renderAll(objProps.arrObjects,gl,program)
         isDrag = false
     }
