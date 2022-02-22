@@ -18,11 +18,14 @@ body {
 }
 
 .export_import{
-    padding-top: 20px;
+    padding-top: 25px;
     display: flex;
     flex-direction: column;
 }
 
 #gl_canvas{
     background-color: rgb(158, 206, 182);
+}
+#import_file{
+    padding-top: 25px;
 }

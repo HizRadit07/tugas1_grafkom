@@ -3,7 +3,7 @@ import { Drawables } from "./drawables";
 import { drawLine } from "./objects/line"
 import { drawSquare, scaleSquare } from "./objects/square";
 import { drawRect, scaleRect } from "./objects/rectangle";
-import { exportAsFile } from "./save_load_utils";
+import { exportAsFile, importData } from "./save_load_utils";
 
 let mousePos: [number, number] = [0,0];
 var isLine = false
@@ -79,6 +79,7 @@ function setupUI(){
     fileExportButton.addEventListener('click', () =>{
         exportAsFile(objProps.arrObjects)
     })
+
 }
 
 export function renderAll(objArr : Array<Drawables>, gl:WebGL2RenderingContext, program:WebGLProgram){
@@ -116,7 +117,14 @@ async function main(){
     //create program
     const drawProgram = await createProgram(gl,vertexShader,fragmentShader)
 
-    
+
+    //we add the importer here for rendering purposes
+    //gl and drawprogram baru diinitialize di main
+    const fileImportButton = document.getElementById('import-btn') as HTMLButtonElement
+    fileImportButton.addEventListener('click', () =>{
+        importData(objProps,gl,drawProgram) 
+    })
+
     canvas.addEventListener('mousedown', (event) =>{
         var canvas_x = getXCursorPosition(canvas, event)
         var canvas_y = getYCursorPosition(canvas, event)
