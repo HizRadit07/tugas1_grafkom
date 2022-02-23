@@ -125,6 +125,16 @@ async function main(){
         importData(objProps,gl,drawProgram) 
     })
 
+    canvas.addEventListener('mouseup', (event) =>{
+        isDrag = false
+    })
+
+    canvas.addEventListener('mousemove', (event) =>{
+        if (selectedObject != null) {
+            changeObjectPoint(canvas,event,gl,drawProgram)
+        }
+    })
+
     canvas.addEventListener('mousedown', (event) =>{
         var canvas_x = getXCursorPosition(canvas, event)
         var canvas_y = getYCursorPosition(canvas, event)
@@ -132,17 +142,8 @@ async function main(){
         startDraw(canvas_x,canvas_y,gl,drawProgram,objProps)
         checkSelectedObject(canvas_x,canvas_y)
 
-
         if (selectedObject != null){
             isDrag = true
-            canvas.addEventListener('mouseup', (event) =>{
-                changeObjectPoint(canvas,event,gl,drawProgram)
-            })
-            if(!isDrag) {
-                canvas.removeEventListener("mouseup", (event) => {
-                    changeObjectPoint(canvas, event, gl, drawProgram)
-                })
-            }
         }
     })
 }
@@ -242,7 +243,7 @@ function changeObjectPoint(canvas, event, gl:WebGL2RenderingContext, program:Web
 
         //change the point
         renderAll(objProps.arrObjects,gl,program)
-        isDrag = false
+        // isDrag = false
     }
 }
 

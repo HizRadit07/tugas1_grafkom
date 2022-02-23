@@ -76,21 +76,33 @@ function pushToArray(destination:any, source:any) {
 }
 
 export function scaleRect(obj:any, x:number, y:number, idxPoint:number) {
-    let pivotPoint = (idxPoint+2)%4
- 
-    // Setting pivot point as index 0
-    setObjPointVertex(0, obj, obj.points[pivotPoint][0], obj.points[pivotPoint][1])
+    let pivotPoint = mod(idxPoint+2, 4)
+    var sameX, sameY = -1
+
+    if (obj.points[mod(idxPoint+1, 4)][1] == obj.points[pivotPoint][1]) {
+        sameX = mod(idxPoint+1, 4)
+        sameY = mod(idxPoint-1, 4)
+    } else {
+        sameX = mod(idxPoint-1, 4)
+        sameY = mod(idxPoint+1, 4)
+    }
 
     // Setting opposite point as index 2
-    setObjPointVertex(2, obj, x, y)
+    setObjPointVertex(idxPoint, obj, x, y)
 
     //Setting reimaing points
-    setObjPointVertex(1, obj, obj.points[0][0], obj.points[2][1])
-    setObjPointVertex(3, obj, obj.points[2][0], obj.points[0][1])
+    setObjPointVertex(sameX, obj, x, obj.points[pivotPoint][1])
+    setObjPointVertex(sameY, obj, obj.points[pivotPoint][0], y)
 
-    console.log(obj.points)
-    console.log(obj.vert)
+
+    // console.log(obj.points)
+    // console.log(obj.vert)
 }
+
+var mod = function (n, m) {
+    var remain = n % m;
+    return Math.floor(remain >= 0 ? remain : remain + m);
+};
 
 function setObjPointVertex(index:number, obj:any, x:number, y:number) {
     obj.vert[index*5] = x

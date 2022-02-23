@@ -108,33 +108,47 @@ function generateEqualSideCorner(firstPoint:number[], secondPoint:number[], inde
 }
 
 export function scaleSquare(obj:any, x:number, y:number, idxPoint:number) {
-    let pivotPoint = (idxPoint+2)%4
+    let pivotPoint = mod (idxPoint+2, 4)
+    var sameX, sameY = -1
  
     // Setting pivot point as index 0
-    setObjPointVertex(0, obj, obj.points[pivotPoint][0], obj.points[pivotPoint][1])
+    // setObjPointVertex(0, obj, obj.points[pivotPoint][0], obj.points[pivotPoint][1])
+
+    if (obj.points[mod(idxPoint+1, 4)][1] == obj.points[pivotPoint][1]) {
+        sameX = mod(idxPoint+1, 4)
+        sameY = mod(idxPoint-1, 4)
+    } else {
+        sameX = mod(idxPoint-1, 4)
+        sameY = mod(idxPoint+1, 4)
+    }
     
     //Generating new scaled opposite vertex
     const canvas = document.getElementById('gl_canvas') as HTMLCanvasElement
-    let existingX = obj.points[0][0]
-    let existingY = obj.points[0][1]
+    let existingX = obj.points[pivotPoint][0]
+    let existingY = obj.points[pivotPoint][1]
     let absYDiff = Math.abs(y - existingY)
     let absXDiff = Math.abs(x - existingX)*canvas.width/canvas.height
     if (absXDiff > absYDiff) {
-        y = generateEqualSideCorner(obj.points[0], [x,y], 0, canvas)
+        y = generateEqualSideCorner(obj.points[pivotPoint], [x,y], 0, canvas)
     } else {
-        x = generateEqualSideCorner(obj.points[0], [x,y], 1, canvas)
+        x = generateEqualSideCorner(obj.points[pivotPoint], [x,y], 1, canvas)
     }
 
     // Setting opposite point as index 2
-    setObjPointVertex(2, obj, x, y)
+    setObjPointVertex(idxPoint, obj, x, y)
 
     //Setting reimaing points
-    setObjPointVertex(1, obj, obj.points[0][0], obj.points[2][1])
-    setObjPointVertex(3, obj, obj.points[2][0], obj.points[0][1])
+    setObjPointVertex(sameX, obj, x, obj.points[pivotPoint][1])
+    setObjPointVertex(sameY, obj, obj.points[pivotPoint][0], y)
 
     console.log(obj.points)
     console.log(obj.vert)
 }
+
+var mod = function (n, m) {
+    var remain = n % m;
+    return Math.floor(remain >= 0 ? remain : remain + m);
+};
 
 function setObjPointVertex(index:number, obj:any, x:number, y:number) {
     obj.vert[index*5] = x
