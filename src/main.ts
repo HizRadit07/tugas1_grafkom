@@ -1,6 +1,7 @@
 import { createProgram, loadShader } from "./loaders/loader";
 import { Drawables } from "./drawables";
 import { drawLine } from "./objects/line"
+import { drawPoly } from "./objects/polygon"
 import { drawSquare, scaleSquare } from "./objects/square";
 import { drawRect, scaleRect } from "./objects/rectangle";
 import { exportAsFile, importData } from "./save_load_utils";
@@ -24,6 +25,7 @@ var objProps = {
 var selectedObject
 var idxPoint
 var isDrag = false
+var isEnter = false
 
 function setLine() {
     isLine = true
@@ -106,6 +108,7 @@ async function main(){
         alert('WebGL is not supported on this browser/device')
         return
     }
+
     canvas.addEventListener('mousemove', (event) => {
         printMousePos(canvas, event)
     }, false)
@@ -146,6 +149,19 @@ async function main(){
             isDrag = true
         }
     })
+
+    window.addEventListener('keydown', (event) =>{
+        var canvas_x = getXCursorPosition(canvas, event)
+        var canvas_y = getYCursorPosition(canvas, event)
+        // console.log(objProps.vertices)
+        if (event.key == 'Enter') {
+            if (isPolygon) {
+                isEnter = true
+                startDraw(canvas_x,canvas_y,gl,drawProgram,objProps)
+            }
+        }
+    })
+
 }
 
 function startDraw(x,y, gl:WebGL2RenderingContext, program:WebGLProgram, objProps){
@@ -157,6 +173,9 @@ function startDraw(x,y, gl:WebGL2RenderingContext, program:WebGLProgram, objProp
         objProps = drawSquare(x,y, gl, program, objProps)
     } else if (isRectangle) {
         objProps = drawRect(x,y, gl, program, objProps)
+    } else if (isPolygon) {
+        objProps = drawPoly(x,y, gl, program, objProps, isEnter)
+        isEnter = false
     }
 }
 
