@@ -3,15 +3,16 @@ import { Drawables } from "../drawables"
 
 
 
-export function drawLine(x,y, gl:WebGL2RenderingContext, program: WebGLProgram, objProps:any){
+export function drawLine(x,y, gl:WebGL2RenderingContext, program: WebGLProgram, objProps:any, color){
+    console.log(color)
     
     if (objProps.n_points < 2){
 
         objProps.vertices.push(x)
         objProps.vertices.push(y)
-        objProps.vertices.push(objProps.rgb[0]/255)
-        objProps.vertices.push(objProps.rgb[1]/255)
-        objProps.vertices.push(objProps.rgb[2]/255)
+        objProps.vertices.push(color[0]/255)
+        objProps.vertices.push(color[1]/255)
+        objProps.vertices.push(color[2]/255)
 
         objProps.curPoints.push([x,y])
 

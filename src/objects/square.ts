@@ -1,7 +1,7 @@
 import {renderAll, setClear} from "../main"
 import { Drawables } from "../drawables"
 
-export function drawSquare(x,y, gl:WebGL2RenderingContext, program: WebGLProgram, objProps:any){
+export function drawSquare(x,y, gl:WebGL2RenderingContext, program: WebGLProgram, objProps:any, color){
     
     if (objProps.n_points < 2){
 
@@ -24,9 +24,9 @@ export function drawSquare(x,y, gl:WebGL2RenderingContext, program: WebGLProgram
 
         objProps.vertices.push(x)
         objProps.vertices.push(y)
-        objProps.vertices.push(objProps.rgb[0]/255)
-        objProps.vertices.push(objProps.rgb[1]/255)
-        objProps.vertices.push(objProps.rgb[2]/255)
+        objProps.vertices.push(color[0]/255)
+        objProps.vertices.push(color[1]/255)
+        objProps.vertices.push(color[2]/255)
 
         objProps.curPoints.push([x,y])
 
@@ -36,7 +36,7 @@ export function drawSquare(x,y, gl:WebGL2RenderingContext, program: WebGLProgram
 
         if (objProps.n_points == 2) {
             
-            let remainingAttributes = generateSquareRemains(objProps)
+            let remainingAttributes = generateSquareRemains(objProps, color)
             let rect_vert = remainingAttributes[0]
             let rect_points = remainingAttributes[1]
             
@@ -64,13 +64,13 @@ export function drawSquare(x,y, gl:WebGL2RenderingContext, program: WebGLProgram
     
 }
 
-function generateSquareRemains(objProps:any) {
+function generateSquareRemains(objProps:any, clr) {
     let point3_x = objProps.curPoints[0][0]
     let point3_y = objProps.curPoints[1][1]
     let point4_x = objProps.curPoints[1][0]
     let point4_y = objProps.curPoints[0][1]
 
-    let color = [objProps.rgb[0]/255, objProps.rgb[1]/255, objProps.rgb[2]/255]
+    let color = [clr[0]/255, clr[1]/255, clr[2]/255]
 
     var vert = objProps.vertices.slice(0,5)
     pushToArray(vert, [point3_x, point3_y].concat(color))

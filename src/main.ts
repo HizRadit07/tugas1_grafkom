@@ -11,6 +11,7 @@ var isLine = false
 var isSquare = false
 var isRectangle = false
 var isPolygon = false
+var color = [0.0,0.0,0.0]
 
 //number of points
 var objProps = {
@@ -65,6 +66,7 @@ function setupUI(){
     const drawRectButton = document.getElementById('draw-rect') as HTMLButtonElement
     const drawPolygonButton = document.getElementById('draw-pol') as HTMLButtonElement
     const fileExportButton = document.getElementById('export-btn') as HTMLButtonElement
+    const colorpicker = document.getElementById('colorPicker') as HTMLInputElement
 
     drawLineButton.addEventListener('click', () => {
         setLine()
@@ -81,6 +83,22 @@ function setupUI(){
     fileExportButton.addEventListener('click', () =>{
         exportAsFile(objProps.arrObjects)
     })
+
+    colorpicker.addEventListener('input', (event) =>{
+        console.log(colorpicker.value)
+        let rgbv = hexToRgb(colorpicker.value)
+        let split = rgbv.split(',');
+        console.log(rgbv)
+        color[0] = parseFloat(split[0])
+        color[1] = parseFloat(split[1])
+        color[2] = parseFloat(split[2])
+    })
+
+    // document.getElementById(colorpicker).onchange = function () {
+    //     objProps.c = this.value;
+    //     objProps.renderAll();
+    // };
+    
 
 }
 
@@ -142,7 +160,7 @@ async function main(){
         var canvas_x = getXCursorPosition(canvas, event)
         var canvas_y = getYCursorPosition(canvas, event)
         // console.log(objProps.vertices)
-        startDraw(canvas_x,canvas_y,gl,drawProgram,objProps)
+        startDraw(canvas_x,canvas_y,gl,drawProgram,objProps,color)
         checkSelectedObject(canvas_x,canvas_y)
 
         if (selectedObject != null){
@@ -157,24 +175,35 @@ async function main(){
         if (event.key == 'Enter') {
             if (isPolygon) {
                 isEnter = true
-                startDraw(canvas_x,canvas_y,gl,drawProgram,objProps)
+                startDraw(canvas_x,canvas_y,gl,drawProgram,objProps, color)
             }
         }
     })
 
 }
 
-function startDraw(x,y, gl:WebGL2RenderingContext, program:WebGLProgram, objProps){
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if(result){
+        var r= parseInt(result[1], 16);
+        var g= parseInt(result[2], 16);
+        var b= parseInt(result[3], 16);
+        return r+","+g+","+b;//return 23,14,45 -> reformat if needed 
+    } 
+    return null;
+  }
+
+function startDraw(x,y, gl:WebGL2RenderingContext, program:WebGLProgram, objProps, color){
     //utk condition isLine, isSquare, dsb, masukin sini
     if (isLine){
-        objProps = drawLine(x,y, gl, program, objProps)
+        objProps = drawLine(x,y, gl, program, objProps, color)
         //this makes it so that harus gambar satu-satu, so pencet button, draw
     } else if (isSquare) {
-        objProps = drawSquare(x,y, gl, program, objProps)
+        objProps = drawSquare(x,y, gl, program, objProps, color)
     } else if (isRectangle) {
-        objProps = drawRect(x,y, gl, program, objProps)
+        objProps = drawRect(x,y, gl, program, objProps, color)
     } else if (isPolygon) {
-        objProps = drawPoly(x,y, gl, program, objProps, isEnter)
+        objProps = drawPoly(x,y, gl, program, objProps, color, isEnter)
         isEnter = false
     }
 }

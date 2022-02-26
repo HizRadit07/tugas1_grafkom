@@ -23,6 +23,12 @@ body {
     flex-direction: column;
 }
 
+.color_picker{
+    padding-top: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
 #gl_canvas{
     background-color: rgb(158, 206, 182);
 }

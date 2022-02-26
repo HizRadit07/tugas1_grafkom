@@ -2,16 +2,16 @@ import {renderAll, setClear} from "../main"
 import { Drawables } from "../drawables"
 import { drawLine } from "./line"
 
-export function drawPoly(x,y, gl:WebGL2RenderingContext, program: WebGLProgram, objProps:any, isDone:boolean){
+export function drawPoly(x,y, gl:WebGL2RenderingContext, program: WebGLProgram, objProps:any, color, isDone:boolean){
     
     if (!isDone) {
 
         //Masukin vertex dan points
         objProps.vertices.push(x)
         objProps.vertices.push(y)
-        objProps.vertices.push(objProps.rgb[0]/255)
-        objProps.vertices.push(objProps.rgb[1]/255)
-        objProps.vertices.push(objProps.rgb[2]/255)
+        objProps.vertices.push(color[0]/255)
+        objProps.vertices.push(color[1]/255)
+        objProps.vertices.push(color[2]/255)
 
         objProps.curPoints.push([x,y])
 
